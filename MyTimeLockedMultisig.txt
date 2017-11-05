@@ -1,0 +1,30 @@
+Time-Locked Multisig
+
+Sometimes time can also be used as a great security mechanism. The following code is based on the congress DAO but with a different twist. Instead of every action requiring the approval of an X number of members, instead any transactions can be initiated by a single member, but they all will require a minimum amount of delay before they can be executed, which varies according to the support that transaction has. The more approvals a proposal has, the sooner it can be executed. A member can vote against a transaction, which will mean that it will cancel one of the other approved signatures.
+
+This means that if you don't have urgency, one or two signatures might be all you need to execute any transaction. But if a single key is compromised, other keys can delay that transaction for months or year or even stop it from being executed.
+How it works
+
+A transaction that has been approved by all keys can be executed after ten minutes (this amount is configurable), and the amount of time it requires doubles every time for every 5% of members who don't vote (and quadruples if they activelly vote against). If it's a simple ether transaction, the transaction is executed as soon as a vote of support puts it under the required time, but a more complex transaction will require it to be manually executed with the correct bytecode. These are the default values, but this can be set differently when creating the contract:
+
+Number of members approving transaction: Approximate time delay
+
+    100% approval: 10 minutes (minimum default)
+    90% approval: 40 minutes
+    80%: 2h40
+    50%: about a week
+    40%: 1 month
+    30%: 4 months
+    20%: Over a year
+    10% or less: 5 years or never
+
+Once the minimum amount of time has passed, anyone can execute the transaction (See "Congress" for a more complete walktrough). This is intentional, as it allows someone to schedule a transaction or hire someone else to execute it.
+The code
+
+Deployment and usage
+
+Deploy that code as you have done before on these tutorials. On the deployment parameters, leaving the minimum time blank will default to 30 minutes, if you want faster lock times, then put 1 minute. After uploading, execute the functions "Add Members" to add new members of your group, they can be either other people you know or accounts on different computers or stored offline.
+
+The account set as "owner" is very powerful as it can add or remove members at will. Therefore, after you added the main members, we recommend that you set the "owner" to another account, by executing the function Transfer Membership. Set that to the multisig itself if you want to have all additions or removals of members to be voted, just like any other transaction. Another alternative is to set that to another trusted multisig wallet, or maybe to 0x000 if you want the number of members to be fixed forever. Remember, the funds on this contract are only as safe as the the "owner" account.
+
+As with any of the above DAO's, this contract can hold ether, any ethereum based tokens and execute any contract. To do that, check how to execute complex proposals on the congress DAO.
