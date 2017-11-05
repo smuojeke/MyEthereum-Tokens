@@ -1,0 +1,26 @@
+House of representatives
+
+What is all that vote delegation good for? For one, you can use it instead of the token weight on an Association. First of all, get the code for a shareholder association but replace the first lines where it describes the token:
+
+When you are writing your contract you can describe multiple other contracts used by your main contract. Some might be functions and variables that are already defined on the target contract, like voteWeight and numberOfDelegationRounds. But notice that balanceOf is a new function, that doesn't exist neither on the Liquid Democracy or the Association contract, we are defining it now, as a function that will return the voteWeight if at least three rounds of delegations have been calculated.
+
+Use the Liquid democracy as the Token Address instead of the original token and proceed to deploy the shareholder association as usual. Just like before, users can create new proposals on what to do or cast votes on these issues, but now, instead of using the token balance as the voting power we are using a delegative process. So if you are a token holder, instead of having to keep yourself constantly informed by all the issues, you can just select someone you trust and appoint them, and then they can choose someone they trust: the result is that your representative, instead of being limited to a given arbitrary geographical proximity, will be someone in your social proximity.
+
+Also it means that you can switch your vote at any moment: if your representative has voted against your interests in some issue you can, before the proposal votes are tallied up, switch your appointee, or just choose to represent yourself on the issue and cast the vote yourself.
+The Executive Branch
+
+Delegative democracies are a great way to choose representatives, but voting on individual proposals might be too slow for some important or simpler decisions: that's why most democratic governments have an executive branch, where an appointed person has the right to represent the state.
+
+After four rounds of delegations, the address with more weight will be set as the Appointee. If there are many delegated votes, then a few more rounds of Calculate Votes might be necessary to settle in the final appointed address.
+
+The Appointee is the only address that can call the Execute function, which will be able to execute (almost) any function representing the democracy as a whole. If there is any ether or token stored in the Liquid democracy contract, the Appointee will be allowed to move it anywhere.
+
+If you have followed our example and created a Shareholder association using this liquid democracy as a token, then you should be able to use the executive branch in an interesting manner: go to the main Association address and execute a Transfer Ownership function to the liquid democracy.
+
+Once that transfer is complete, switch the function to Change Voting Rules. This allows you to change some essential voting rules, like the minimum quorum needed for a vote to pass or the time a new proposal needs to stay on the floor. Try changing these settings and click execute: when the confirmation window pops up it will tell you that the transaction Can't be executed. This happens, of course, because only the address set as Owner can change these settings and the contract will reject this transaction attempt. So instead of typing your password copy the code on the data field and save it to a text file. Click cancel, scroll to the top and click copy address and also save that to a text file.
+
+Now go to the Liquid democracy page and choose execute. On target put the address of the association contract, leave ether amount at 0 and paste the code you copied previously into the bytecode data field. Make sure you are executing it from the account set as the appointee and click execute.
+
+Once the transaction has been picked up, the Liquid democracy will pass the order to the association and the new voting rules might apply. The appointee has the absolute power to do anything that the Liquid democracy contract can execute. You can use the same technique to create a Mintable Token owned by the delegative democracy, and then allow the appointee to mint tokens or freeze accounts.
+
+To prevent abuses of powers, you can set one Forbidden function that the Appointee cannot ever do. If you followed our example the forbidden function is the transferOwnership(address), to prevent the appointee from transferring the ownership of the association to themselves (in politics, when a president uses his executive power to transfer to themselves something that used to belongs to the presidency, it's a coup or embezzling).
