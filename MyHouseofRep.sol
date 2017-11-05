@@ -32,10 +32,18 @@ contract tokenRecipient {
     }
 }
 
-contract Token {
-    mapping (address => uint256) public balanceOf;
-    function transferFrom(address _from, address _to, uint256 _value) returns (bool success);
+contract token {
+    mapping (address => uint256) public voteWeight;
+    uint public numberOfDelegationRounds;
+
+    function balanceOf(address member) constant returns (uint256 balance) {
+        if (numberOfDelegationRounds < 3)
+            return 0;
+        else
+            return this.voteWeight(member);
+    }
 }
+
 
 /**
  * The shareholder association contract itself
