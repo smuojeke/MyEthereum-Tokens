@@ -51,6 +51,7 @@ contract BeeToken {
         balanceOf[msg.sender] = totalSupply;                // Give the creator all initial tokens
         name = tokenName;                                   // Set the name for display purposes
         symbol = tokenSymbol;                               // Set the symbol for display purposes
+        timeOfLastProof = now;                              // Set the timestamp to that variable
     }
 
     /**
@@ -240,5 +241,23 @@ contract MyAdvancedToken is owned, BeeToken {
         require(this.balance >= amount * sellPrice);      // checks if the contract has enough ether to buy
         _transfer(msg.sender, this, amount);              // makes the transfers
         msg.sender.transfer(amount * sellPrice);          // sends ether to the seller. It's important to do this last to avoid recursion attacks
+    }
+    // Hashing for Proof of Work Issuance
+    bytes32 public currentChallenge;                         // The coin starts with a challenge
+    uint public timeOfLastProof;                             // Variable to keep track of when rewards were given
+    uint public difficulty = 10**32;                         // Difficulty starts reasonably low
+
+    function proofOfWork(uint nonce){
+        bytes8 n = bytes8(sha3(nonce, currentChallenge));    // Generate a random hash based on input
+        require(n >= bytes8(difficulty));                   // Check if it's under the difficulty
+
+        uint timeSinceLastProof = (now - timeOfLastProof);  // Calculate time since last reward was given
+        require(timeSinceLastProof >=  5 seconds);         // Rewards cannot be given too quickly
+        balanceOf[msg.sender] += timeSinceLastProof / 60 seconds;  // The reward to the winner grows by the minute
+
+        difficulty = difficulty * 10 minutes / timeSinceLastProof + 1;  // Adjusts the difficulty
+
+        timeOfLastProof = now;                              // Reset the counter
+        currentChallenge = sha3(nonce, currentChallenge, block.blockhash(block.number - 1));  // Save a hash that will be used as the next proof
     }
 }
