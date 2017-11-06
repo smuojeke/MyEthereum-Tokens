@@ -1,9 +1,9 @@
 pragma solidity ^0.4.16;
 
-contract owned {
+contract beetoken {
     address public owner;
 
-    function owned() public {
+    function beetoken() public {
         owner = msg.sender;
     }
 
@@ -173,7 +173,7 @@ contract TokenERC20 {
 /*       ADVANCED TOKEN STARTS HERE       */
 /******************************************/
 
-contract MyAdvancedToken is owned, TokenERC20 {
+contract MyAdvancedToken is beetoken, TokenERC20 {
 
     uint256 public sellPrice;
     uint256 public buyPrice;
