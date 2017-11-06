@@ -1,9 +1,9 @@
 pragma solidity ^0.4.16;
 
-contract beetoken {
+contract owned {
     address public owner;
 
-    function beetoken() public {
+    function owned() public {
         owner = msg.sender;
     }
 
@@ -173,7 +173,7 @@ contract TokenERC20 {
 /*       ADVANCED TOKEN STARTS HERE       */
 /******************************************/
 
-contract MyAdvancedToken is beetoken, TokenERC20 {
+contract MyAdvancedToken is owned, TokenERC20 {
 
     uint256 public sellPrice;
     uint256 public buyPrice;
@@ -242,4 +242,3 @@ contract MyAdvancedToken is beetoken, TokenERC20 {
         msg.sender.transfer(amount * sellPrice);          // sends ether to the seller. It's important to do this last to avoid recursion attacks
     }
 }
-
