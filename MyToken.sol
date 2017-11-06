@@ -26,6 +26,7 @@ contract BeeToken {
     uint8 public decimals = 18;
     // 18 decimals is the strongly suggested default, avoid changing it
     uint256 public totalSupply;
+    uint public timeOfLastProof;                             // Variable to keep track of when rewards were given
 
     // This creates an array with all balances
     mapping (address => uint256) public balanceOf;
