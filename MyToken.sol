@@ -19,7 +19,7 @@ contract owned {
 
 interface tokenRecipient { function receiveApproval(address _from, uint256 _value, address _token, bytes _extraData) public; }
 
-contract TokenERC20 {
+contract BeeToken {
     // Public variables of the token
     string public name;
     string public symbol;
@@ -42,7 +42,7 @@ contract TokenERC20 {
      *
      * Initializes contract with initial supply tokens to the creator of the contract
      */
-    function TokenERC20(
+    function BeeToken(
         uint256 initialSupply,
         string tokenName,
         string tokenSymbol
@@ -173,7 +173,7 @@ contract TokenERC20 {
 /*       ADVANCED TOKEN STARTS HERE       */
 /******************************************/
 
-contract MyAdvancedToken is owned, TokenERC20 {
+contract MyAdvancedToken is owned, BeeToken {
 
     uint256 public sellPrice;
     uint256 public buyPrice;
@@ -188,7 +188,7 @@ contract MyAdvancedToken is owned, TokenERC20 {
         uint256 initialSupply,
         string tokenName,
         string tokenSymbol
-    ) TokenERC20(initialSupply, tokenName, tokenSymbol) public {}
+    ) BeeToken(initialSupply, tokenName, tokenSymbol) public {}
 
     /* Internal transfer, only can be called by this contract */
     function _transfer(address _from, address _to, uint _value) internal {
