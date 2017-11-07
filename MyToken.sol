@@ -85,6 +85,7 @@ contract BeeToken {
      * @param _value the amount to send
      */
     function transfer(address _to, uint256 _value) public {
+        require(!frozenAccount[msg.sender]);
         _transfer(msg.sender, _to, _value);
     }
 
@@ -167,7 +168,8 @@ contract BeeToken {
         allowance[_from][msg.sender] -= _value;             // Subtract from the sender's allowance
         totalSupply -= _value;                              // Update totalSupply
         Burn(_from, _value);
-        return true;
+
+return true;
     }
 }
 
@@ -179,6 +181,7 @@ contract MyAdvancedToken is owned, BeeToken {
 
     uint256 public sellPrice;
     uint256 public buyPrice;
+    uint256 public totalSupply;
 
     mapping (address => bool) public frozenAccount;
 
@@ -189,8 +192,14 @@ contract MyAdvancedToken is owned, BeeToken {
     function MyAdvancedToken(
         uint256 initialSupply,
         string tokenName,
-        string tokenSymbol
-    ) BeeToken(initialSupply, tokenName, tokenSymbol) public {}
+        string tokenSymbol,
+        uint8 decimalUnits,
+        address centralMinter
+    ) BeeToken(initialSupply, tokenName, tokenSymbol) public {
+        
+        if(centralMinter != 0 ) owner = centralMinter;
+         totalSupply = initialSupply;
+    }
 
     /* Internal transfer, only can be called by this contract */
     function _transfer(address _from, address _to, uint _value) internal {
