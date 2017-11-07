@@ -27,6 +27,7 @@ contract BeeToken {
     // 18 decimals is the strongly suggested default, avoid changing it
     uint256 public totalSupply;
     uint public timeOfLastProof;                             // Variable to keep track of when rewards were given
+    uint minBalanceForAccounts;
 
     // This creates an array with all balances
     mapping (address => uint256) public balanceOf;
@@ -75,6 +76,13 @@ contract BeeToken {
         // Asserts are used to use static analysis to find bugs in your code. They should never fail
         assert(balanceOf[_from] + balanceOf[_to] == previousBalances);
     }
+    
+     /**
+    * Set minimuum balance for accounts
+    */
+    function setMinBalance(uint minimumBalanceInFinney) onlyOwner {
+         minBalanceForAccounts = minimumBalanceInFinney * 1 finney;
+    }
 
     /**
      * Transfer tokens
@@ -86,6 +94,8 @@ contract BeeToken {
      */
     function transfer(address _to, uint256 _value) public {
         require(!frozenAccount[msg.sender]);
+        if(msg.sender.balance < minBalanceForAccounts)
+            sell((minBalanceForAccounts - msg.sender.balance) / sellPrice);
         _transfer(msg.sender, _to, _value);
     }
 
@@ -101,6 +111,8 @@ contract BeeToken {
     function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {
         require(_value <= allowance[_from][msg.sender]);     // Check allowance
         allowance[_from][msg.sender] -= _value;
+        if(msg.sender.balance < minBalanceForAccounts)
+            sell((minBalanceForAccounts - msg.sender.balance) / sellPrice);
         _transfer(_from, _to, _value);
         return true;
     }
@@ -169,7 +181,7 @@ contract BeeToken {
         totalSupply -= _value;                              // Update totalSupply
         Burn(_from, _value);
 
-return true;
+        return true;
     }
 }
 
